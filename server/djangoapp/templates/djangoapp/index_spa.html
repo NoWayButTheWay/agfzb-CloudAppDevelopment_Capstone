@@ -34,7 +34,7 @@
                         <a class="nav-link" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                        <a class="nav-link" href="#" onclick="loadPage('about')">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
@@ -51,6 +51,7 @@
     <div class="container mt-5" id="content">
         <!-- Content will be loaded here -->
     </div>
+    <footer>
      <!-- Footer Navigation Bar -->
      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
         <div class="container">
@@ -59,7 +60,7 @@
                     <a class="nav-link" href="#">Privacy Policy</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+                    <a class="nav-link" href="#" onclick="loadPage('contact')">Contact Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Sitemap</a>
@@ -67,9 +68,52 @@
             </ul>
         </div>
     </nav>
-    
-
-    </body>
+</footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+
+    <script>
+        function loadPage(pageName) {
+            // You can load content dynamically based on the clicked link
+            // For this example, I'm just displaying a message for each page
+            let content = document.getElementById('content');
+            switch (pageName) {
+                case 'home':
+                    content.innerHTML = '<h2>Welcome to the Home Page</h2>';
+                    break;
+                case 'about':
+                   // Load content from 'about.html'
+                        fetch('about')
+                        .then(response => response.text())
+                        .then(data => {
+                            content.innerHTML = data;
+                        })
+                        .catch(error => {
+                            content.innerHTML = '<h2>Error loading content</h2>';
+                            console.error(error);
+                        });
+                    break;
+                case 'services':
+                    content.innerHTML = '<h2>Our Services</h2><p>We offer a variety of services.</p>';
+                    break;
+                case 'contact':
+                    // Load content from 'contact.html'
+                    fetch('contact')
+                    .then(response => response.text())
+                    .then(data => {
+                        content.innerHTML = data;
+                    })
+                    .catch(error => {
+                        content.innerHTML = '<h2>Error loading content</h2>';
+                        console.error(error);
+                    });
+                    break;
+                default:
+                    content.innerHTML = '<h2>Page not found</h2>';
+            }
+        }
+    </script>
+
+    </body>
+
 </html>
