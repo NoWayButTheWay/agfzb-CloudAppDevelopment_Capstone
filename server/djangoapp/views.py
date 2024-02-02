@@ -86,9 +86,9 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        url = "http://localhost:4444/dealership" #ibm function does not work 
+        url = "http://localhost:4444/api/dealership" #ibm function does not work 
         dealerships = get_dealers_from_cf(url)
-        context['dealernames'] = dealerships
+        context['dealer_details'] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
@@ -96,14 +96,10 @@ def get_dealerships(request):
 def get_dealerships_details(request):
     context = {}
     if request.method == "GET":
-        url = "http://localhost:4444/review" #ibm function does not work 
+        url = "http://localhost:4444/api/review" #ibm function does not work 
         # Get dealers from the URL
-        dealerships = get_dealers_from_cf(url)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
-        # return HttpResponse(dealer_names)
-        context['dealernames'] = dealerships
+        dealer_reviews = get_dealers_from_cf(url)
+        context['dealer_reviews'] = dealer_reviews
         return render(request, 'djangoapp/index.html', context)
 # ...
 

@@ -68,17 +68,17 @@ def get_review_by_id(id):
 @app.post("/api/review")
 def add_reviews():
     headers = {"Content-Type": "application/json"}
-    '''{
-      "id": 2,
-      "name": "Gwenora Zettoi",
-      "dealership": 23,
-      "review": "Future-proofed foreground capability",
-      "purchase": true,
-      "purchase_date": "09/17/2020",
-      "car_make": "Pontiac",
-      "car_model": "Firebird",
-      "car_year": 1995
-    }'''
+    # '''{
+    #   "id": 2,
+    #   "name": "Gwenora Zettoi",
+    #   "dealership": 23,
+    #   "review": "Future-proofed foreground capability",
+    #   "purchase": true,
+    #   "purchase_date": "09/17/2020",
+    #   "car_make": "Pontiac",
+    #   "car_model": "Firebird",
+    #   "car_year": 1995
+    # }'''
 
     url = "http://admin:password@localhost:5984/reviews"
     json = {"selector":{"state":"state"}}
@@ -88,4 +88,4 @@ def add_reviews():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=4444)
+    app.run(host='0.0.0.0',debug=True,port=4444)

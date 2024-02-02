@@ -67,16 +67,23 @@
     
     <!--Add a dealer table here -->
     <div>
-    {% if dealernames %}
+    {% if dealer_details %}
         <div class="container">
             <div class="card-deck">
-                <div class="card" style="width: 36rem;">
-                {% for dealername in dealernames %}
-                         
-                    <p  class="card-title">{{ dealername }}</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="row">                
+                {% for dealer_detail in dealer_details %}
+                    <div class="col-sm-6">
+                        <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Dealer Details</h5>
+                            <p class="card-text">{{ dealer_detail }}</p>
+                            <a href="#" class="btn btn-primary">View Reviews</a>
+                        </div>
+                        </div>
+                    </div>
+                   
                 {% endfor %}      
-        </div>
+                </div>
             </div>
         </div>
     {% else %}
