@@ -87,8 +87,8 @@ def get_dealerships(request):
     context = {}
     if request.method == "GET":
         url = "http://localhost:4444/api/dealership" #ibm function does not work 
-        dealerships = get_dealers_from_cf(url)
-        context['dealer_details'] = dealerships
+        dealership_list = get_dealers_from_cf(url)
+        context['dealership_list'] = dealership_list
         return render(request, 'djangoapp/index.html', context)
 
 
@@ -100,6 +100,10 @@ def get_dealer_details(request, dealer_id):
         dealer_reviews = get_dealer_reviews_from_cf(url, int(dealer_id))
         context['dealer_reviews'] = dealer_reviews
         context['dealer_id'] = dealer_id
+        context['image'] = dealer_reviews
+        url2 = "http://localhost:4444/api/dealership/"+str(dealer_id) #ibm function does not work 
+        dealer_name = get_dealers_from_cf(url2)
+        context['dealer_name'] = dealer_name
         return render(request, 'djangoapp/dealer_details.html', context)
 # ...
 
@@ -125,6 +129,6 @@ def add_review(request, dealer_id):
         }
         dealer_reviews = post_request(url, json)
         context['dealer_reviews'] = dealer_reviews
-        return render(request, 'djangoapp/add_review.html', context)
+        return redirect("/djangoapp/dealer/"+str(dealer_id))
 # ...
 

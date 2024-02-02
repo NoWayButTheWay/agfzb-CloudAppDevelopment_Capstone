@@ -46,10 +46,15 @@ def get_dealers_from_cf(url, **kwargs):
     json_result = get_request(url)
     if json_result:
         # Get the row list in JSON as dealers
-        dealers = json_result["rows"]
+        if not "rows" in json_result:
+            dealers = json_result
+        else:
+            dealers = json_result["rows"]
         # For each dealer object
+        if not "doc" in dealers:
+                return dealers.get("full_name")
         for dealer in dealers:
-            # Get its content in `doc` object
+            # Get its content in `doc` object            
             dealer_doc = dealer["doc"]
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
@@ -73,12 +78,19 @@ def get_dealer_reviews_from_cf(url, dealerId):
             # Get its content in `doc` object
             review_doc = review
             # Create a CarDealer object with values in `doc` object
+            if not "id" in review_doc:
+                review_doc["id"] = "sdfsd"
+            
+            if not "car_make" in review_doc:
+                review_doc["car_make"] = "Car Make"
+            if not "car_year" in review_doc:
+                review_doc["car_year"] = "Car Year"
             review_obj = DealerReview(
                 dealership=review_doc["dealership"], 
                 name=review_doc["name"], 
                 purchase=review_doc["purchase"], 
                 review=review_doc["review"], 
-                purchase_date=review_doc["purchase_date"], 
+                purchase_date=review_doc["purchase_date"],
                 car_make=review_doc["car_make"], 
                 car_model=review_doc["car_model"], 
                 car_year=review_doc["car_year"], 
@@ -96,10 +108,13 @@ def get_dealer_reviews_from_cf(url, dealerId):
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(text):
+    print("-"*50)
+    print(text)
+    print("-"*50)
     url = 'https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/cb302777-500f-445e-a9f4-a14f79c0efbb/v1/analyze'
     api_key = '8PQfmmA6s_tLBB7y5g4bgjuCtRUkxy4Y5Q4TIf7qNCmR'
     json = {
-        "text": "I love apples! I do not like oranges."
+        "text": text
     }
     headers = {
     'Content-Type': 'application/json'
@@ -113,18 +128,23 @@ def analyze_review_sentiments(text):
     }
     response = requests.post(url, json=json, params=params, headers=headers, auth=HTTPBasicAuth('apikey', api_key))
     result = response.json()
+    print(result)
+    if "error" in result:
+        return 'neutral.png'
+         
     sentiment = result['sentiment']['document']
     sentiment_label = sentiment['label']
     if sentiment_label == 'positive':
         print("Sentiment: Positive")
-        return 'Positive'
+        return 'positive.png'
     elif sentiment_label == 'neutral':
         print("Sentiment: Neutral")
-        return 'Neutral'
+        return 'neutral.png'
     elif sentiment_label == 'negative':
         print("Sentiment: Negative")
-        return 'Negative'
+        return 'negative.png'
     else:
+        return 'neutral.png'
         print("Sentiment: Unknown")
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative

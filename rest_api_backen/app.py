@@ -78,7 +78,6 @@ def add_reviews():
     headers = {"Content-Type": "application/json"}
     
     json = request.get_json()
-
     url = "http://admin:password@localhost:5984/reviews"
     response = requests.post(url, json=json, headers=headers)
 

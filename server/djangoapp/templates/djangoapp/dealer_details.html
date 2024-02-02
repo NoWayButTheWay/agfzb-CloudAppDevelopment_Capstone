@@ -15,31 +15,56 @@
 
     <body>
     <div>
-    {% if dealer_reviews %}
+        {% if user.is_authenticated %}
         <div class="container">
-            <div class="card-deck">
-                <div class="row">                
-                {% for dealer_review in dealer_reviews %}
-                    <div class="col-sm-15">
-                        <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Dealer Reviews</h5>
-                            <p class="card-text">Review: {{ dealer_review.review }}</p>
-                            <p class="card-text">Type: {{ dealer_review.sentiment }}</p>
-                        </div>
-                        </div>
-                    </div>
-                   
-                {% endfor %}     
-               
-                </div>
-            </div>
+        <h3>Review For Dealership {{dealer_name}}</h3>
         </div>
-    {% else %}
-        <p>No Reviews are available.</p>
-    {% endif %}
-    <a href="../review/{{ dealer_id }}" class="btn btn-primary">Add Review</a>
+            {% if dealer_reviews %}
+            <div class="container">
+                <div class="card-deck">
+                    <div class="card-columns"> 
+                        <div class="col-sm-15">
+                {% for dealer_review in dealer_reviews %}
+                        
+                        <div class="card">
+                            <img class="card-img-left" style="width: 32px; height: 32px;" src="{{MEDIA_URL}}/emoji/{{dealer_review.sentiment}}">
+                        <div class="card-body bg-light">
+                            <p class="card-title" style="" >{{ dealer_review.car_model }}</p>
+                            <p class="card-text">{{ dealer_review.review }}</p>
+                            
+                        </div>
+                        </div>
+                    
+                {% endfor %}     
+            {% else %} <div class="container">
+                             <p>No Reviews are available.</p>
+                           
+                   
+                </div>
+            {% endif %}
+            
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="container">
+            <a href="../review/{{ dealer_id }}" class="btn btn-primary">Add Review</a>
+        </div>
     </div>
+
+    {% else %}
+                    <li>
+                         <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                 <input type="text" class="form-control" placeholder="Username" name="username" >
+                                 <input type="password" class="form-control" placeholder="Password" name="password" >
+                                 <button class="btn btn-primary" type="submit">Login</button>
+                                 <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                         </form>
+                    </li>
+                    {% endif %}
 
    
     
