@@ -86,20 +86,25 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
+        url = "http://localhost:4444/dealership" #ibm function does not work 
+        dealerships = get_dealers_from_cf(url)
+        context['dealernames'] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealerships(request):
+def get_dealerships_details(request):
+    context = {}
     if request.method == "GET":
-        url = "http://admin:password@localhost:5984/dealerships/_all_docs?include_docs=true" #ibm function does not work 
+        url = "http://localhost:4444/review" #ibm function does not work 
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        print(dealer_names)
-        return HttpResponse(dealer_names)
+        # return HttpResponse(dealer_names)
+        context['dealernames'] = dealerships
+        return render(request, 'djangoapp/index.html', context)
 # ...
 
 # Create a `add_review` view to submit a review
