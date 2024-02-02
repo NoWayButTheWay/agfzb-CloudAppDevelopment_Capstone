@@ -51,40 +51,38 @@ def get_dealership_by_state(state):
 
 @app.get("/api/review")
 def get_review():
-    url = "http://admin:password@localhost:5984/reviews/_all_docs?include_docs=true"
-    response = requests.get(url)
-    return response.json().get('rows')
+    if not request.args:
+        url = "http://admin:password@localhost:5984/reviews/_all_docs?include_docs=true"
+        response = requests.get(url)
+        return response.json().get('rows')
 
-@app.get("/api/review/<int:id>")
-def get_review_by_id(id):
+    if "dealerId" in request.args:
+            headers = {"Content-Type": "application/json"}
+            url = "http://admin:password@localhost:5984/reviews/_find"
+            json = {"selector":{"dealership":int(request.args["dealerId"])}}
+            response = requests.post(url, json=json, headers=headers)
+            return response.json().get("docs")
+
+@app.get("/api/review/<int:dealership>")
+def get_review_by_id(dealership):
     headers = {"Content-Type": "application/json"}
     url = "http://admin:password@localhost:5984/reviews/_find"
-    json = {"selector":{"id":id}}
+    json = {"selector":{"dealership":dealership}}
     response = requests.post(url, json=json, headers=headers)
 
-    return response.json().get("docs")[0]
+    return response.json().get("docs")
 
 
 @app.post("/api/review")
 def add_reviews():
     headers = {"Content-Type": "application/json"}
-    # '''{
-    #   "id": 2,
-    #   "name": "Gwenora Zettoi",
-    #   "dealership": 23,
-    #   "review": "Future-proofed foreground capability",
-    #   "purchase": true,
-    #   "purchase_date": "09/17/2020",
-    #   "car_make": "Pontiac",
-    #   "car_model": "Firebird",
-    #   "car_year": 1995
-    # }'''
+    
+    json = request.get_json()
 
     url = "http://admin:password@localhost:5984/reviews"
-    json = {"selector":{"state":"state"}}
     response = requests.post(url, json=json, headers=headers)
 
-    return response.json().get("docs")[0]
+    return 'ok'
 
 
 if __name__ == '__main__':

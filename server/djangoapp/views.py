@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarDealer
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -93,17 +93,38 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealerships_details(request):
+def get_dealer_details(request, dealer_id):
     context = {}
     if request.method == "GET":
         url = "http://localhost:4444/api/review" #ibm function does not work 
-        # Get dealers from the URL
-        dealer_reviews = get_dealers_from_cf(url)
+        dealer_reviews = get_dealer_reviews_from_cf(url, int(dealer_id))
         context['dealer_reviews'] = dealer_reviews
-        return render(request, 'djangoapp/index.html', context)
+        context['dealer_id'] = dealer_id
+        return render(request, 'djangoapp/dealer_details.html', context)
 # ...
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
+def add_review(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        context["dealer_id"] = dealer_id
+        return render(request, 'djangoapp/add_review.html', context)
+    
+    if request.method == "POST":
+        print("ASDFSADFASDFASFDASFASD")
+        url = "http://localhost:4444/api/review" #ibm function does not work
+        json = {
+            
+            "name": request.POST["name"],
+            "dealership": dealer_id,
+            "review": request.POST["review"],
+            "purchase": request.POST["purchase"],
+            "purchase_date": request.POST["purchase_date"],
+            "car_model": request.POST["car_model"],
+    
+        }
+        dealer_reviews = post_request(url, json)
+        context['dealer_reviews'] = dealer_reviews
+        return render(request, 'djangoapp/add_review.html', context)
 # ...
 
