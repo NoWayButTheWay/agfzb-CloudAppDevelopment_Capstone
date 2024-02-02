@@ -112,6 +112,9 @@ def add_review(request, dealer_id):
     context = {}
     if request.method == "GET":
         context["dealer_id"] = dealer_id
+        url2 = "http://localhost:4444/api/dealership/"+str(dealer_id) #ibm function does not work 
+        dealer_name = get_dealers_from_cf(url2)
+        context['dealer_name'] = dealer_name
         return render(request, 'djangoapp/add_review.html', context)
     
     if request.method == "POST":
